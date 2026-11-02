@@ -118,7 +118,7 @@ Keep screenshots of the default lore map in `screenshots/` up to date after visu
    - roads (MST trade routes + A\* roads/paths + sea lanes)
    - labels (region names, flavour notes, "KREMANTIN" title, oceans, big rivers) and the compass stamp
 
-**Important limitation:** the whole canvas is currently **one continent**. The lore anchors are hard-coded, normalised positions with no data file. Fixing this is roadmap items A and B.
+**Important limitation:** the whole canvas is currently **one continent**, and its lore anchors are hard-coded. Canon (see `data/canon.json`) says Menfor, Lintur, Tantser and the Northern Expanse are **separate continents** around a central Kremantin, but v1 drew them as regions *of* Kremantin. Fixing this is roadmap items A and B.
 
 ---
 
@@ -142,65 +142,110 @@ Keep screenshots of the default lore map in `screenshots/` up to date after visu
 
 Each item lists **what** to do and **acceptance criteria**. Do them roughly in order. A and B are what the owner asked for most.
 
-### A. World-scale Aleria: several continents, Kremantin as one of them (highest priority)
+### A. World-scale Aleria: five continents, Kremantin in the centre (highest priority)
 
-**Problem:** the generated map *is* Kremantin, edge to edge. In canon, Kremantin is one continent inside the wider world of Aleria.
+**Problem:** the generated map *is* Kremantin, edge to edge. v1 made four other canon **continents** into regions *of* Kremantin: Menfor in the north, frozen lands in the north-east, jungles in the south and storms in the south-east.
+
+**Confirmed canon world layout** (from the author's lore notes; details in `data/canon.json`):
+
+| Continent | Direction | Character |
+|---|---|---|
+| **Kremantin** | centre | Temperate to subtropical. Plains, ancient forests, mountain ranges. Home of the Kingdom of Elysandria, other human nations, and the Church of Ucliat. |
+| **Menfor** | north | Deserts, badlands, volcanic ranges. Sparse; homeland of the Tenebrim. |
+| **Lintur** | south-west | Dense magical jungles and megafauna. Isolated civilizations, rumoured Lost Age ruins. |
+| **Tantser** | south-east | Largely unexplored. A fragmented landmass veiled in permanent storms. |
+| **The Northern Expanse** | far north-east | Eternal winter: glaciers and frozen taiga. The elven continent (Gorthon Federation). |
+
+Seas separate the continents. None are named in canon.
 
 **Do:**
 
-- **New generation scale `world`.**
-  - Settings and UI: a "World of Aleria" generation mode alongside "Kremantin (continent)" and "Freeform".
-  - Canvas: a larger world canvas (e.g. `2400x1500`, 12k–20k cells) with **3–6 landmasses** separated by real oceans.
-  - **Kremantin** is one continent at a fixed, configurable position and size in world coordinates (data-driven, see B). It is generated with the existing lore rules, re-scaled into its bounding box.
-  - The other continents and island chains come from seeded procedural generation. Their names and contents are marked **unexplored / mysterious**: low `known` values, fog, "terra incognita" labels and few or no settlements. Canon names come from the canon data file when they are known.
-- **Refactor the lore code** so that positions are in continent-local normalised coordinates, mapped through a per-continent transform. `terrain()` and `populate()` should accept a "continent spec" list instead of hard-coding one layout.
+- **New generation scale `world`, as the lore-mode default.**
+  - Use a larger canvas (e.g. `2400x1500`, 12k–20k cells).
+  - Place the **five canon continents** from `data/canon.json` (`continents[].layoutHint`, all `inferred`, so keep them editable), separated by real oceans.
+  - Each continent gets its own climate and biome bias:
+    - Menfor: hot or arid desert, badlands, volcanic peaks. **Not** cold tundra.
+    - Lintur: jungle.
+    - Tantser: fragmented islands under permanent storm, heavy fog, low `known`.
+    - Northern Expanse: glacier and taiga.
+    - Kremantin: temperate to subtropical. Remove the cold wastes and frozen corner from Kremantin itself.
+  - Keep "Kremantin (continent)" and "Freeform" as other modes.
+- **Hero's View / known world:** Kremantin is well known. Menfor and the Northern Expanse are known but distant. Lintur is a frontier. Tantser is near-blank and mythical, with a storm veil.
+- **Refactor the lore code** so that positions are in continent-local normalised coordinates, mapped through a per-continent transform. `terrain()` and `populate()` should take a list of continent specs (from canon.json) instead of hard-coding one layout.
 - **World vs. continent view.**
-  - The world view shows the whole planet surface, with oceans named and Kremantin highlighted.
-  - "Focus Kremantin" (and focusing any continent) either:
-    - zooms and frames that continent, with a nicer re-rendered label set (region labels only appear at continent zoom), or
+  - The world view shows all five continents, with Kremantin highlighted.
+  - "Focus Kremantin" (or any continent) either:
+    - zooms and frames that continent, with region labels appearing only at continent zoom, or
     - generates a higher-resolution continent map from the same seed (a sub-mesh).
   - Pick the simpler, robust option first. Zoom-dependent label and icon visibility (level-of-detail) is needed either way.
-- Ocean and sea names, sea lanes between continents, and unknown waters faded at the world edges.
+- **Kremantin interior:** v1's "regions" become **nations of Kremantin**.
+  - Elysandria is confirmed central.
+  - Other human-dominated nations exist but are unnamed, so they are `placeholder` (label them clearly or leave them unlabeled).
+- Sea lanes between continents, including the Menfor→Kremantin invasion route as an optional historical layer. Unknown waters fade at the world edges. Sea names stay generated placeholders until canon names them.
 
 **Acceptance criteria:**
 
-- [ ] The default load (or a clearly offered default) shows **Aleria with ≥3 continents**. Kremantin is recognisable and internally keeps all current lore regions in their correct relative positions.
-- [ ] The other landmasses look plausible (not ellipses), are clearly unexplored (fogged, sparse), and have editable names and notes.
+- [ ] The default lore map shows **Aleria with the five canon continents in the canon directions** (Menfor N, Lintur SW, Tantser SE, Northern Expanse far NE, Kremantin centre), each with the right climate character.
+- [ ] Kremantin itself contains no frozen, cold-waste or storm-continent regions. Elysandria sits centrally, with plains, forests and mountains.
+- [ ] Tantser reads as storm-veiled and unexplored. The other landmasses look plausible (not ellipses), with editable names and notes.
 - [ ] A single control or shortcut switches between world view and the Kremantin view. Labels and icons are readable at both scales, and nothing is huge or overlapping at world zoom.
 - [ ] Share links and JSON round-trip preserve the mode. Old Kremantin-only projects still load.
 - [ ] Generation in world mode takes < 1 s for 16k cells in Node. There are no console errors.
 
-### B. Canon-accuracy pass with an editable canon data file
+### B. Canon-accuracy pass driven by `data/canon.json`
 
-**Problem:** the Kremantin layout came from a short brief, not from the novel. Several things are placeholders:
+**Status:** `data/canon.json` now exists (schema in `data/README.md`). It is seeded with the confirmed facts from the author's lore notes:
 
-- state names (Menfor, Frozen Holds, Beastfolk Prides, Rih-Fugh Enclaves, Tenebrim Reaches)
-- most settlement and marker names, which are generated
-- race territories
-- religious zones
-- "The Shadowed West" and "The Unmapped East"
+- the 5 continents
+- the Kingdom of Elysandria (central Kremantin, absolute monarchy, Queen Elisabeth Bernt Ravenshield III, seat of the Church)
+- the Gorthon Federation and its elven city of Rikardia (north of the Northern Expanse)
+- Church Holling (a roadside church outside the Elysandrian capital)
+- the capital's palace-temple complex with the summoning chamber and Core Seal (the city's proper name is unknown)
+- Crimson Sun Order sanctums (underground or in mountains; the JOAT sub-branch is in the capital)
+- race homelands
+- placement rules for villages, dungeons, crystals and wealth
+
+`v1Placeholders[]` lists the v1 content that canon contradicts:
+
+- Menfor, the frozen lands, the jungles and the storm region as parts of Kremantin
+- the states "Beastfolk Prides", "Rih-Fugh Enclaves" and "Tenebrim Reaches"
+- "Shadowed West" and "Unmapped East"
 
 **Do:**
 
-- Create **`data/canon.json`**, plus a short `data/README.md` describing its schema. Store:
-  - continents (name, world position/size, known/unknown)
-  - regions (name, anchor, extent hint, climate, biome bias, description)
-  - canonical places (name, kind, region, approximate position or relation such as "north of X", notes, source chapter/wiki URL)
-  - states (name, ruler, colour), religions/orders, races and homelands
-  - every entry carries **`"canon": "confirmed" | "inferred" | "placeholder"`** and an optional `"source"`.
-- Research the setting, including the *A Guide for Heroes (Who'd Rather Not Be)* fandom wiki and the novel. Put what is confirmed in the file **with sources**. Anything invented stays `placeholder`.
-- The generator reads `canon.json` (via `fetch`, falling back to an embedded default so `file://`-less tests still work). Canon places are placed first, at their stated positions, snapped to suitable terrain. Procedural content only fills the gaps.
+- The generator reads `canon.json` via `fetch`, falling back to an embedded copy (a JS module mirror) so tests and offline use still work.
+  - Canon continents, nations and places are placed first, snapped to suitable terrain. Procedural content only fills the gaps and is always marked `placeholder`.
+- **Remove or replace the v1 placeholders** that contradict canon.
+- **Races layer:** use the homelands and rules:
+  - Tenebrim → Menfor
+  - Elves → Northern Expanse (some on Kremantin)
+  - Devils → Underworld (some on Kremantin)
+  - Mellets → Church and Crimson Sun sites, underground or in mountains on Kremantin
+  - Beastkin → small tribes in forests and remote valleys
+  - Equars → no territory
+  - Narelith → rare, at high-mana spots
+  - Humans and demi-humans → Kremantin's nations
+- **Religion layer:**
+  - Church of Ucliat across the human nations, seated in Elysandria.
+  - Elves follow their own gods (e.g. a Goddess of Frost in Rikardia).
+  - Devils, Tetrabrachians and Tenebrim are non-Ucliatist.
+  - Lizardmen are mixed.
+- **Threat layer:** Doomsdays come from a sealed facility at the deepest point of the **Underworld**, and the surface gets the overflow.
+  - Surface "breach" markers are therefore `inferred` / `placeholder`.
+  - Add "forbidden zones" (high Star-rank beast territories) that roads avoid.
+  - An optional Underworld layer is future work (4 regions, each ruled by a Fuhmar).
 - **UI:**
-  - The Inspector shows a badge (Confirmed / Inferred / Placeholder) and the source link.
-  - A Layers toggle "Highlight placeholders" draws a dashed outline or question-mark badge on non-canon items.
-- **Import/export:** "Export canon data" downloads the current canon list (including the user's edits in the editor). "Import canon data" loads a corrected file. This is the main way for the user to correct canon without code.
+  - The Inspector shows a badge (Confirmed / Inferred / Placeholder) and the source.
+  - A Layers toggle "Highlight placeholders" draws a dashed outline or "?" badge on non-canon items.
+- **Import/export:** "Export canon data" and "Import canon data" let the owner correct canon without touching code.
+- **Privacy:** canon.json holds short paraphrases only. Never paste the author's manuscript or lore text into the repo. The source notes are private.
 
 **Acceptance criteria:**
 
-- [ ] `data/canon.json` exists and validates against the documented schema. Every Kremantin label, state and fixed marker in lore mode comes from it.
-- [ ] All non-sourced entries are visibly flagged in the UI and in the file.
+- [ ] In lore mode, every continent, nation and fixed place comes from `canon.json`. Nothing listed in `v1Placeholders` appears unless it is flagged as a placeholder.
+- [ ] All `inferred` / `placeholder` entries are visibly flagged in the UI and in the file.
 - [ ] Editing a place's name or position and exporting canon data round-trips. Re-generating after an import reflects the corrections.
-- [ ] Section 5 (Open questions) is updated with what was confirmed and what is still unknown.
+- [ ] Section 5 is kept current as the owner answers the remaining questions.
 
 ### C. Smarter placement of settlements, markers and labels
 
@@ -276,17 +321,39 @@ Each item lists **what** to do and **acceptance criteria**. Do them roughly in o
 
 ---
 
-## 5. Open questions for the owner (canon to confirm)
+## 5. Canon questions: status
 
-Record answers in `data/canon.json` and update this list.
+Answers come from the author's private lore notes (Main doc, Lore tab, titled "A (Real) Guide for Heroes", plus the Races tab), summarised in `data/canon.json`. Open items still need the owner's input; record answers in `data/canon.json`.
 
-1. What other continents of Aleria are named in canon, and roughly where are they relative to Kremantin? Which are known to the people of Kremantin?
-2. Is **Menfor** a nation, a region, or both? Who rules it, and where does Elysandria's northern border lie?
-3. Do the north-eastern frozen lands, the southern jungles and the south-eastern storm region have canon names, and are there states or peoples there?
-4. Where do the races live? Beastfolk (lion-like), short folk, Rih-Fugh (horned, third eye), tenebrim/narelith, and any others.
-5. What is the canon name of Elysandria's capital (v1 says "Royal Capital of Elysandria")? Which other cities, towns, dungeons and landmarks are named, and where are they?
-6. Church of Ucliat vs. Crimson Sun Order: where are their seats, strongholds and hidden sites? Should Crimson sites be hidden by default?
-7. Doomsday breaches and Lumenari manifestations: are any specific places named in canon?
-8. Seas and oceans: any canon names? (All current names are generated placeholders.)
-9. Scale: how far is it, for example, from the capital to Menfor? (The v1 scale bar says "leagues" as a placeholder.)
-10. Should the default map be the whole world of Aleria or Kremantin, with the other one a click away?
+1. **Other continents and positions: ANSWERED.**
+   - Menfor: north. Lintur: south-west. Tantser: south-east. The Northern Expanse: far north-east. Kremantin: centre. Seas lie between them.
+   - *Still open:* how well Kremantin knows each one. Tantser is explicitly largely unexplored; the others seem known but distant.
+2. **Menfor: ANSWERED.**
+   - Menfor is a separate northern continent (deserts, badlands, volcanic ranges), not a nation or a region of Kremantin. It is sparse and clan-based (Tenebrim).
+   - *Still open:* any Menfor polities or rulers, and where Elysandria's own borders lie within Kremantin.
+3. **North-east, south and south-east names: ANSWERED.**
+   - North-east: the Northern Expanse, home of the elven Gorthon Federation (states such as Rikardia).
+   - Jungles: the continent of Lintur, south-west, with unnamed isolated civilizations.
+   - Storms: the continent of Tantser, south-east, with no known peoples.
+4. **Race homelands: PARTIALLY ANSWERED.**
+   - Tenebrim → Menfor. Elves → Northern Expanse. Devils → Underworld (from very hot regions).
+   - Mellets → underground or in mountains on Kremantin, inside the Church.
+   - Beastkin → small tribes in forests and remote valleys. Equars → no nations.
+   - Narelith → rare, where mana is abundant.
+   - Kremantin is a melting pot of most races.
+   - *Open:* the homelands of Lizardmen, Tetrabrachians and Halflings. "Rih-Fugh" does not appear in the notes; the horned, third-eyed people match the Veyrith Devil subtype.
+5. **Capital and named places: PARTIALLY ANSWERED.**
+   - The capital is a palace complex intertwined with religious buildings, with the summoning chamber and Core Seal. Its **proper name is not given**.
+   - Named places: Church Holling (a roadside church outside the capital) and Rikardia (an elven city in the north of the Northern Expanse).
+   - *Open:* the capital's name, and other cities, towns, dungeons and landmarks with their positions.
+6. **Church vs. Crimson Sun Order sites: PARTIALLY ANSWERED.**
+   - The Church is seated in Elysandria, with churches worldwide (holding appraisal devices, guarded by Church Knights).
+   - Crimson Sun sanctums are usually underground or in mountains. The JOAT sub-branch is in the capital. A few sanctums use unethical methods.
+   - *Open:* specific sanctum locations, and whether they should be hidden by default (an owner preference).
+7. **Doomsday breaches and Lumenari sites: PARTIALLY ANSWERED (mechanics only).**
+   - Doomsdays originate at a sealed facility at the deepest point of the Underworld; the surface gets the overflow. High Star-rank beast territories become forbidden zones.
+   - Lumenari appear once every few centuries, with no fixed sites.
+   - *Open:* any named surface breach points or historical Lumenari sites.
+8. **Sea and ocean names: OPEN.** Seas between the continents are confirmed, but none are named.
+9. **Scale and distances: OPEN.** No distances are given.
+10. **Default map (whole world or Kremantin): OPEN (owner decision).** The roadmap assumes the world view is the lore default, since canon places Kremantin at the centre of five continents.

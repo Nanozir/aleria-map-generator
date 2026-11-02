@@ -1,0 +1,409 @@
+{
+  "schemaVersion": 1,
+  "about": "Canon geography for Aleria, used by the map generator. Every entry has a status: confirmed (stated in the author's lore notes), inferred (a reasonable reading of the lore, not stated outright) or placeholder (invented for the map; replace or confirm). Numeric layout hints are always inferred: the lore gives compass directions, not coordinates.",
+  "sources": {
+    "lore": "Main doc, Lore tab",
+    "races": "Main doc, Races tab",
+    "note": "'Lore tab' means the author's worldbuilding tab of the Main doc, titled 'A (Real) Guide for Heroes'. The doc has no tab literally named 'Lore'."
+  },
+  "world": {
+    "name": "Aleria",
+    "status": "confirmed",
+    "source": "Main doc, Lore tab",
+    "notes": "Five named continents, separated by seas. A surface world above the Underworld, where mana pools because it sinks."
+  },
+  "continents": [
+    {
+      "id": "kremantin",
+      "name": "Kremantin",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "direction": "center",
+      "climate": "temperate to subtropical",
+      "terrain": [
+        "fertile plains",
+        "ancient forests",
+        "mountain ranges"
+      ],
+      "notes": "The central continent. A melting pot of races, home to the Kingdom of Elysandria and other human-dominated nations, seat of the Church of Ucliat, and the main site of Hero summonings.",
+      "layoutHint": {
+        "x": 0.5,
+        "y": 0.5,
+        "w": 0.34,
+        "h": 0.36,
+        "status": "inferred"
+      }
+    },
+    {
+      "id": "menfor",
+      "name": "Menfor",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "direction": "north",
+      "climate": "harsh, arid",
+      "terrain": [
+        "deserts",
+        "badlands",
+        "volcanic ranges"
+      ],
+      "notes": "A separate continent, not a region of Kremantin. Vast, harsh and sparsely populated. Origin and main homeland of the Tenebrim. The Grand Monarch came from here and invaded across the seas.",
+      "layoutHint": {
+        "x": 0.48,
+        "y": 0.13,
+        "w": 0.4,
+        "h": 0.17,
+        "status": "inferred"
+      }
+    },
+    {
+      "id": "lintur",
+      "name": "Lintur",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "direction": "southwest",
+      "climate": "tropical, lush",
+      "terrain": [
+        "dense magical jungles"
+      ],
+      "notes": "Wild frontier with megafauna, rare creatures and plants, and isolated civilizations. Rumoured ruins from before the Lost Age.",
+      "layoutHint": {
+        "x": 0.2,
+        "y": 0.78,
+        "w": 0.26,
+        "h": 0.28,
+        "status": "inferred"
+      }
+    },
+    {
+      "id": "tantser",
+      "name": "Tantser",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "direction": "southeast",
+      "climate": "permanent storms",
+      "terrain": [
+        "fragmented landmass"
+      ],
+      "notes": "Largely unexplored and the subject of myths; few who sail there return. Maps show it as fragmented and veiled in storms, so it should render as fogged, storm-covered islands.",
+      "layoutHint": {
+        "x": 0.8,
+        "y": 0.8,
+        "w": 0.24,
+        "h": 0.24,
+        "status": "inferred"
+      }
+    },
+    {
+      "id": "northern-expanse",
+      "name": "The Northern Expanse",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "direction": "far northeast",
+      "climate": "eternal winter (a permanent result of a past Doomsday)",
+      "terrain": [
+        "glaciers",
+        "frozen taiga"
+      ],
+      "notes": "The elven continent, ancestral home of the Elves and the Gorthon Federation. Buried Ancient complexes lie under the frost; elven cities run on geothermal and steam infrastructure. It is far from Kremantin and does not rely on Heroes.",
+      "layoutHint": {
+        "x": 0.85,
+        "y": 0.15,
+        "w": 0.24,
+        "h": 0.22,
+        "status": "inferred"
+      }
+    }
+  ],
+  "nations": [
+    {
+      "id": "elysandria",
+      "name": "Kingdom of Elysandria",
+      "continent": "kremantin",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "position": "central Kremantin",
+      "government": "absolute monarchy",
+      "ruler": "Queen Elisabeth Bernt Ravenshield III (\"the Iron Queen\")",
+      "notes": "The central human nation and primary seat of the Church of Ucliat. Its lands mix plains, ancient forests and mountains, with trade routes, farmland, fortified borders against monster incursions, and scattered remnants of an older era. Its very high mana quality is why summonings happen here."
+    },
+    {
+      "id": "gorthon",
+      "name": "Gorthon Federation",
+      "continent": "northern-expanse",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "government": "federation of self-governing elven states under an elven council",
+      "notes": "Technologically ahead of the human nations (magi-tech)."
+    },
+    {
+      "id": "other-kremantin-nations",
+      "name": "Other human-dominated nations of Kremantin",
+      "continent": "kremantin",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "notes": "Their existence is confirmed; their names, number and positions are unknown. The generator should treat them as placeholders."
+    }
+  ],
+  "places": [
+    {
+      "id": "elysandria-capital",
+      "name": "Capital of Elysandria",
+      "kind": "capital",
+      "nation": "elysandria",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "nameStatus": "placeholder",
+      "notes": "A palace complex intertwined with religious buildings, including the summoning chamber that holds the Core Seal. Home of the Crimson Sun Order's JOAT sub-branch. The city's proper name is not given."
+    },
+    {
+      "id": "church-holling",
+      "name": "Church Holling",
+      "kind": "temple",
+      "nation": "elysandria",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "position": "roadside, outside the capital"
+    },
+    {
+      "id": "rikardia",
+      "name": "Rikardia",
+      "kind": "city",
+      "continent": "northern-expanse",
+      "nation": "gorthon",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "position": "in the north (of the Northern Expanse)",
+      "notes": "An elven city and Federation state. It worships a Goddess of Frost, not Ucliat."
+    },
+    {
+      "id": "underworld-siphon",
+      "name": "Sealed siphoning facility",
+      "kind": "breach",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "position": "deepest point of the Underworld (no surface location given)",
+      "notes": "The single place where Doomsdays originate. It belongs on an Underworld layer, not on the surface map."
+    }
+  ],
+  "underworld": {
+    "status": "confirmed",
+    "source": "Main doc, Lore tab",
+    "notes": "A second realm under the surface, lit by crystals and home to Devil civilization. It is split into four regions, each ruled by a Fuhmar, with Constaelous managing sectors beneath them. Not drawn yet; it could become an optional layer or a separate map."
+  },
+  "organizations": [
+    {
+      "id": "church-ucliat",
+      "name": "Church of Ucliat",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "seat": "elysandria",
+      "notes": "The dominant religion across most human nations. Churches around the world hold appraisal devices."
+    },
+    {
+      "id": "church-knights",
+      "name": "Church Knights",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "notes": "The Church's militia, guarding churches worldwide. Insignia: silver chains, sword-crossed sun medallions and a halo-like headpiece."
+    },
+    {
+      "id": "crimson-sun",
+      "name": "Crimson Sun Order",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "notes": "A Mellet-dominated branch of the Church. Its sanctums are usually underground or in mountains; the JOAT sub-branch is in the capital of Elysandria. A few sanctums use unethical methods.",
+      "placementRule": "sanctums underground or in mountains; one in the capital"
+    },
+    {
+      "id": "hunters",
+      "name": "Hunter Association",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "notes": "Small, functional offices in settlements."
+    },
+    {
+      "id": "adventurers",
+      "name": "Adventurer Guild",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "notes": "Large guild halls in settlements."
+    }
+  ],
+  "races": [
+    {
+      "id": "humans",
+      "name": "Humans",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "homeland": "kremantin",
+      "notes": "The dominant race of Kremantin's nations."
+    },
+    {
+      "id": "tenebrim",
+      "name": "Tenebrim",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "homeland": "menfor",
+      "notes": "Very uncommon on Kremantin. Clan-based, with little coin trade."
+    },
+    {
+      "id": "elves",
+      "name": "Elves",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "homeland": "northern-expanse",
+      "notes": "Also present on Kremantin."
+    },
+    {
+      "id": "devils",
+      "name": "Devils",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab; Races tab",
+      "homeland": "underworld",
+      "notes": "Come from very hot regions; also present on Kremantin."
+    },
+    {
+      "id": "mellets",
+      "name": "Mellets",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "homeland": "kremantin (underground / mountains)",
+      "notes": "Clustered inside the Church and the Crimson Sun Order."
+    },
+    {
+      "id": "beastkin",
+      "name": "Beastkin",
+      "status": "confirmed",
+      "source": "Main doc, Races tab",
+      "homeland": "none (created by a Hero)",
+      "placementRule": "small secluded tribal communities in forests and remote valleys"
+    },
+    {
+      "id": "demihumans",
+      "name": "Demi-humans",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "homeland": "kremantin",
+      "notes": "Present in Elysandrian society and its army."
+    },
+    {
+      "id": "equars",
+      "name": "Equars",
+      "status": "confirmed",
+      "source": "Main doc, Races tab",
+      "homeland": "none",
+      "notes": "Short folk with no nations; they live as family units."
+    },
+    {
+      "id": "lizardmen",
+      "name": "Lizardmen",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "homeland": "unknown",
+      "notes": "Present on Kremantin; clan-based."
+    },
+    {
+      "id": "tetrabrachians",
+      "name": "Tetrabrachians",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "homeland": "unknown",
+      "notes": "Present on Kremantin."
+    },
+    {
+      "id": "narelith",
+      "name": "Narelith",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "homeland": "none",
+      "placementRule": "rare; appear where mana is abundant"
+    },
+    {
+      "id": "halflings",
+      "name": "Halflings",
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "homeland": "unknown",
+      "notes": "Listed among Kremantin's races."
+    },
+    {
+      "id": "lumenari",
+      "name": "Lumenari",
+      "status": "confirmed",
+      "source": "Main doc, Races tab",
+      "homeland": "none",
+      "notes": "Appear once every few centuries; no fixed sites."
+    }
+  ],
+  "seas": [
+    {
+      "id": "seas",
+      "name": null,
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "notes": "Seas separate the continents (the Grand Monarch crossed them from Menfor). No sea or ocean names are given, so all generated sea names are placeholders."
+    }
+  ],
+  "rules": [
+    {
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "rule": "Villages exist only where local Hunters or Adventurers can manage monsters. High Star-rank beast territories are forbidden zones that shape travel and trade routes."
+    },
+    {
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "rule": "Dungeons form where mana gathers: underground near crystals, old battlefields and mass graves. Kingdoms keep them as economic resources."
+    },
+    {
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "rule": "Crystals are common in mountains, dungeons and other mana-rich places. Low-mana wastelands and depleted regions also exist."
+    },
+    {
+      "status": "confirmed",
+      "source": "Main doc, Lore tab",
+      "rule": "Wealth concentrates in political and religious capitals and major guild cities."
+    }
+  ],
+  "scale": {
+    "status": "placeholder",
+    "notes": "No distances are given. The scale bar's 'leagues' is a placeholder."
+  },
+  "v1Placeholders": [
+    {
+      "name": "Menfor as a northern region of Kremantin",
+      "status": "placeholder",
+      "notes": "Contradicted by canon: Menfor is its own continent to the north."
+    },
+    {
+      "name": "Frozen Lands / Frozen Holds (NE Kremantin)",
+      "status": "placeholder",
+      "notes": "Contradicted by canon: the frozen land is the Northern Expanse, a separate continent."
+    },
+    {
+      "name": "Southern Jungles (S Kremantin)",
+      "status": "placeholder",
+      "notes": "Contradicted by canon: the jungle continent is Lintur, to the southwest. Kremantin is temperate to subtropical."
+    },
+    {
+      "name": "Storm-Shrouded Reach (SE Kremantin)",
+      "status": "placeholder",
+      "notes": "Contradicted by canon: the storm-veiled land is Tantser, a separate continent to the southeast."
+    },
+    {
+      "name": "Beastfolk Prides, Rih-Fugh Enclaves, Tenebrim Reaches (states)",
+      "status": "placeholder",
+      "notes": "No such states exist in the lore. Beastkin live in small tribes, Tenebrim come from Menfor, and 'Rih-Fugh' does not appear (the horned, third-eyed people match the Veyrith Devil subtype)."
+    },
+    {
+      "name": "The Shadowed West / The Unmapped East",
+      "status": "placeholder",
+      "notes": "Invented for v1."
+    },
+    {
+      "name": "Generated settlement, marker and sea names",
+      "status": "placeholder"
+    }
+  ]
+}

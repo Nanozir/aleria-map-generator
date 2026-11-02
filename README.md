@@ -19,6 +19,7 @@ It is pure static HTML/CSS/JavaScript: ES modules, no build step and no server c
 ## Docs
 
 - [`docs/ORIGINAL_PLAN.md`](docs/ORIGINAL_PLAN.md): the original brief this project was built from.
+- [`data/canon.json`](data/canon.json): canon geography of Aleria (five continents, nations, places, race homelands). Each entry is flagged confirmed, inferred or placeholder. Edit it to correct the map's canon.
 - [`CLAUDE.md`](CLAUDE.md): guide for coding agents (Claude Code etc.): architecture, conventions, how to test, and the prioritized improvement roadmap (world of Aleria with multiple continents, canon-accurate Kremantin, smarter placement, known gaps).
 
 ## Run it locally

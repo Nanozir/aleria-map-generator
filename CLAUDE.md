@@ -158,6 +158,18 @@ Each item lists **what** to do and **acceptance criteria**. Do them roughly in o
 
 Seas separate the continents. None are named in canon.
 
+> **Hard rule: Menfor is NEVER cold or snowy.** It is deserts, badlands and volcanic ranges. No generator, preset or random seed may give Menfor glacier, tundra, snow-peak, taiga or cold-waste biomes (`continents[].forbiddenBiomes` in canon.json). The snowy plains and glaciers belong to **the Northern Expanse** (far north-east). Assert this in a Node test across many seeds.
+
+**Rough layout reference (NOT canon):** [`docs/rough-world-sketch.png`](docs/rough-world-sketch.png) is the owner's AI-drafted sketch. Use it only for rough arrangement and feel; scale and proportions are not canon.
+
+- **Menfor:** top-left; arid, badlands and mountains.
+- **Kremantin:** a large central continent inside a lighter ring of shallow sea. Green in the west and south, with many fjord-like inlets and islands on its east side.
+- **Lintur:** a large dark-jungle continent to the south-west, with inland lakes.
+- **Tantser:** a scattered south-eastern island chain.
+- **Northern Expanse:** the snowy landmass at the top right. The sketch **mislabels it "Menfor"**; ignore that label.
+
+The `layoutHint`s in canon.json follow this sketch and are marked `inferred`.
+
 **Do:**
 
 - **New generation scale `world`, as the lore-mode default.**
@@ -172,23 +184,25 @@ Seas separate the continents. None are named in canon.
   - Keep "Kremantin (continent)" and "Freeform" as other modes.
 - **Hero's View / known world:** Kremantin is well known. Menfor and the Northern Expanse are known but distant. Lintur is a frontier. Tantser is near-blank and mythical, with a storm veil.
 - **Refactor the lore code** so that positions are in continent-local normalised coordinates, mapped through a per-continent transform. `terrain()` and `populate()` should take a list of continent specs (from canon.json) instead of hard-coding one layout.
-- **World vs. continent view.**
-  - The world view shows all five continents, with Kremantin highlighted.
-  - "Focus Kremantin" (or any continent) either:
-    - zooms and frames that continent, with region labels appearing only at continent zoom, or
-    - generates a higher-resolution continent map from the same seed (a sub-mesh).
-  - Pick the simpler, robust option first. Zoom-dependent label and icon visibility (level-of-detail) is needed either way.
+- **View selector (owner requirement).** Provide a view selector with:
+  - **World:** all five continents.
+  - **Each single continent:** Kremantin, Menfor, Lintur, Tantser, the Northern Expanse.
+  - **Intermediate framings:** e.g. "Kremantin & Menfor", "Kremantin & Lintur", "Southern seas", or any user-saved framing that spans a few continents or zoom levels.
+  - Switching views uses **smooth animated zoom/pan** between framings. Level-of-detail rules decide which labels and icons show at each zoom (region and town labels only at continent zoom).
+  - Implement framings as camera presets over one world mesh first. If detail at single-continent zoom isn't enough, add an optional higher-resolution continent sub-mesh generated from the same seed.
+  - The chosen view is saved in the project JSON and in share links.
 - **Kremantin interior:** v1's "regions" become **nations of Kremantin**.
   - Elysandria is confirmed central.
   - Other human-dominated nations exist but are unnamed, so they are `placeholder` (label them clearly or leave them unlabeled).
-- Sea lanes between continents, including the Menfor→Kremantin invasion route as an optional historical layer. Unknown waters fade at the world edges. Sea names stay generated placeholders until canon names them.
+- Sea lanes between continents, including the Menfor→Kremantin invasion route as an optional historical layer. Unknown waters fade at the world edges. Sea names are generated **placeholders, clearly flagged** ("?" badge or italic grey, `status: placeholder`) and easy to rename in the Inspector, until the owner names them.
 
 **Acceptance criteria:**
 
 - [ ] The default lore map shows **Aleria with the five canon continents in the canon directions** (Menfor N, Lintur SW, Tantser SE, Northern Expanse far NE, Kremantin centre), each with the right climate character.
 - [ ] Kremantin itself contains no frozen, cold-waste or storm-continent regions. Elysandria sits centrally, with plains, forests and mountains.
 - [ ] Tantser reads as storm-veiled and unexplored. The other landmasses look plausible (not ellipses), with editable names and notes.
-- [ ] A single control or shortcut switches between world view and the Kremantin view. Labels and icons are readable at both scales, and nothing is huge or overlapping at world zoom.
+- [ ] The view selector offers World, all five single continents, and at least two intermediate framings, with smooth zoom between them. Labels and icons are readable at every framing, and nothing is huge or overlapping at world zoom.
+- [ ] A Node test over 50 seeds finds zero cold or snowy biome cells on Menfor.
 - [ ] Share links and JSON round-trip preserve the mode. Old Kremantin-only projects still load.
 - [ ] Generation in world mode takes < 1 s for 16k cells in Node. There are no console errors.
 
@@ -200,7 +214,7 @@ Seas separate the continents. None are named in canon.
 - the Kingdom of Elysandria (central Kremantin, absolute monarchy, Queen Elisabeth Bernt Ravenshield III, seat of the Church)
 - the Gorthon Federation and its elven city of Rikardia (north of the Northern Expanse)
 - Church Holling (a roadside church outside the Elysandrian capital)
-- the capital's palace-temple complex with the summoning chamber and Core Seal (the city's proper name is unknown)
+- the capital's palace-temple complex with the summoning chamber and Core Seal. The name is undecided; the owner's brainstormed candidates are Ishmek, Fiorheim, Jolheim, Elmain and Hiriam, all `placeholder`. Make the capital name a prominent, easily editable field (Inspector + World tab), and never hard-code one candidate as canon.
 - Crimson Sun Order sanctums (underground or in mountains; the JOAT sub-branch is in the capital)
 - race homelands
 - placement rules for villages, dungeons, crystals and wealth
@@ -223,6 +237,9 @@ Seas separate the continents. None are named in canon.
   - Mellets → Church and Crimson Sun sites, underground or in mountains on Kremantin
   - Beastkin → small tribes in forests and remote valleys
   - Equars → no territory
+  - Lizardmen → Kremantin and Lintur
+  - Tetrabrachians → Kremantin and Menfor
+  - Halflings → Kremantin
   - Narelith → rare, at high-mana spots
   - Humans and demi-humans → Kremantin's nations
 - **Religion layer:**
@@ -335,17 +352,19 @@ Answers come from the author's private lore notes (Main doc, Lore tab, titled "A
    - North-east: the Northern Expanse, home of the elven Gorthon Federation (states such as Rikardia).
    - Jungles: the continent of Lintur, south-west, with unnamed isolated civilizations.
    - Storms: the continent of Tantser, south-east, with no known peoples.
-4. **Race homelands: PARTIALLY ANSWERED.**
+4. **Race homelands: ANSWERED.**
    - Tenebrim → Menfor. Elves → Northern Expanse. Devils → Underworld (from very hot regions).
    - Mellets → underground or in mountains on Kremantin, inside the Church.
    - Beastkin → small tribes in forests and remote valleys. Equars → no nations.
    - Narelith → rare, where mana is abundant.
+   - **Lizardmen → Kremantin and Lintur. Tetrabrachians → Kremantin and Menfor. Halflings → Kremantin** (owner, chat 2026-11-02).
    - Kremantin is a melting pot of most races.
-   - *Open:* the homelands of Lizardmen, Tetrabrachians and Halflings. "Rih-Fugh" does not appear in the notes; the horned, third-eyed people match the Veyrith Devil subtype.
+   - *Note:* "Rih-Fugh" does not appear in the notes; the horned, third-eyed people match the Veyrith Devil subtype.
 5. **Capital and named places: PARTIALLY ANSWERED.**
-   - The capital is a palace complex intertwined with religious buildings, with the summoning chamber and Core Seal. Its **proper name is not given**.
+   - The capital is a palace complex intertwined with religious buildings, with the summoning chamber and Core Seal.
+   - **The name is undecided.** Candidates: Ishmek, Fiorheim, Jolheim, Elmain, Hiriam (all placeholder). Keep the name an editable field.
    - Named places: Church Holling (a roadside church outside the capital) and Rikardia (an elven city in the north of the Northern Expanse).
-   - *Open:* the capital's name, and other cities, towns, dungeons and landmarks with their positions.
+   - *Open:* other cities, towns, dungeons and landmarks with their positions.
 6. **Church vs. Crimson Sun Order sites: PARTIALLY ANSWERED.**
    - The Church is seated in Elysandria, with churches worldwide (holding appraisal devices, guarded by Church Knights).
    - Crimson Sun sanctums are usually underground or in mountains. The JOAT sub-branch is in the capital. A few sanctums use unethical methods.
@@ -354,6 +373,8 @@ Answers come from the author's private lore notes (Main doc, Lore tab, titled "A
    - Doomsdays originate at a sealed facility at the deepest point of the Underworld; the surface gets the overflow. High Star-rank beast territories become forbidden zones.
    - Lumenari appear once every few centuries, with no fixed sites.
    - *Open:* any named surface breach points or historical Lumenari sites.
-8. **Sea and ocean names: OPEN.** Seas between the continents are confirmed, but none are named.
-9. **Scale and distances: OPEN.** No distances are given.
-10. **Default map (whole world or Kremantin): OPEN (owner decision).** The roadmap assumes the world view is the lore default, since canon places Kremantin at the centre of five continents.
+8. **Sea and ocean names: OPEN (not decided yet).** Seas between the continents are confirmed. Until they are named, the generator uses clearly flagged placeholder names that the user can rename.
+9. **Scale and distances: OPEN / placeholder.** Not decided as canon. `docs/rough-world-sketch.png` is a rough, non-canon layout reference only.
+10. **Default map: ANSWERED.** Offer a view selector: the whole world, each single continent, and in-between framings, with smooth zoom (roadmap A). The world view is a sensible default.
+
+**Hard rule (owner):** Menfor is never snowy. Snowy plains and glaciers are the Northern Expanse.

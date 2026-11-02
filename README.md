@@ -16,6 +16,11 @@ It is pure static HTML/CSS/JavaScript: ES modules, no build step and no server c
 
 ![Parchment style](screenshots/kremantin-parchment.png)
 
+## Docs
+
+- [`docs/ORIGINAL_PLAN.md`](docs/ORIGINAL_PLAN.md): the original brief this project was built from.
+- [`CLAUDE.md`](CLAUDE.md): guide for coding agents (Claude Code etc.): architecture, conventions, how to test, and the prioritized improvement roadmap (world of Aleria with multiple continents, canon-accurate Kremantin, smarter placement, known gaps).
+
 ## Run it locally
 
 Browsers block ES modules on `file://`, so serve the folder with any static web server:
